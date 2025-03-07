@@ -9,7 +9,7 @@ import Foundation
 import AWSClientRuntime
 import AWSCognitoIdentity
 
-struct AwsAccessor {
+public struct AwsAccessor {
     let identityId = "eu-west-3:dc31782e-b253-c861-91a9-c7fbe3ed5a59"
     let region = "eu-west-3"
     let service = "execute-api"
@@ -17,7 +17,7 @@ struct AwsAccessor {
     var httpMethod = "GET"
     var parameters = [String: Any]()
     
-    func getCredentialsForIdentity() async throws -> Credentials {
+    public func getCredentialsForIdentity() async throws -> Credentials {
         do {
             // Initialize the Cognito Identity client
             let client = try CognitoIdentityClient(region: region)
@@ -43,7 +43,7 @@ struct AwsAccessor {
         return Credentials()
     }
     
-    func callAPIGateway(accessKey: String, secretKey: String, sessionToken: String) async -> [String: Any] {
+    public func callAPIGateway(accessKey: String, secretKey: String, sessionToken: String) async -> [String: Any] {
         
         var responseContent: [String: Any] = [:]
         
@@ -98,7 +98,7 @@ struct AwsAccessor {
     }
 }
 
-struct Credentials {
+public struct Credentials {
     var accessKeyId: String?
     var secretAccessKey: String?
     var sessionToken: String?

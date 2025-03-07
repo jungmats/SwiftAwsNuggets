@@ -8,7 +8,7 @@ import Foundation
 import CryptoKit
 import AWSClientRuntime
 
-struct AwsV4Signer {
+public struct AwsV4Signer {
     
     let signedHeaders = "host;x-amz-content-sha256;x-amz-date;x-amz-security-token"
     
@@ -21,34 +21,8 @@ struct AwsV4Signer {
     let url: URL
     let payload: String
     let time_now: Date = Date()
-
-    public func sha256(_ input: String) -> String {
-        let data = Data(input.utf8)
-        let hashed = SHA256.hash(data: data)
-        let retValue = hashed.map { String(format: "%02x", $0) }.joined()
-        print("sha256: \(retValue)")
-        return retValue
-    }
-    
-    func canonicalRequest(amzDate: String, hashedPayload: String) -> String {
-        let canonicalURI = url.path.isEmpty ? "/" : url.path + "/"
-        print("canonical URI \(canonicalURI)")
-        let canonicalQueryString = url.query ?? ""
-
-        let canonicalHeaders = "host:\(url.host!)\nx-amz-content-sha256:\(hashedPayload)\nx-amz-date:\(amzDate)\nx-amz-security-token:\(sessionToken)\n"
         
-        let canonicalRequest = """
-        \(httpMethod)
-        \(canonicalURI)
-        \(canonicalQueryString)
-        \(canonicalHeaders)
-        \(signedHeaders)
-        \(hashedPayload)
-        """
-        return canonicalRequest
-    }
-    
-    func signRequest() -> URLRequest {
+    public func signRequest() -> URLRequest {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyyMMdd'T'HHmmss'Z'"
         dateFormatter.timeZone = TimeZone(abbreviation: "UTC")
@@ -99,6 +73,32 @@ struct AwsV4Signer {
         print("Authorization Header: \(authorizationHeader)")
         
         return request
+    }
+
+    private func canonicalRequest(amzDate: String, hashedPayload: String) -> String {
+        let canonicalURI = url.path.isEmpty ? "/" : url.path + "/"
+        print("canonical URI \(canonicalURI)")
+        let canonicalQueryString = url.query ?? ""
+
+        let canonicalHeaders = "host:\(url.host!)\nx-amz-content-sha256:\(hashedPayload)\nx-amz-date:\(amzDate)\nx-amz-security-token:\(sessionToken)\n"
+        
+        let canonicalRequest = """
+        \(httpMethod)
+        \(canonicalURI)
+        \(canonicalQueryString)
+        \(canonicalHeaders)
+        \(signedHeaders)
+        \(hashedPayload)
+        """
+        return canonicalRequest
+    }
+    
+    private func sha256(_ input: String) -> String {
+        let data = Data(input.utf8)
+        let hashed = SHA256.hash(data: data)
+        let retValue = hashed.map { String(format: "%02x", $0) }.joined()
+        print("sha256: \(retValue)")
+        return retValue
     }
     
     private func hmacSHA256(key: Data, data: String) -> Data {
