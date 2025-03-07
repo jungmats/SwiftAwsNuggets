@@ -2,13 +2,23 @@ import Testing
 import Foundation
 @testable import SwiftAwsNuggets
 
+func initializeDefaultAwsAccessor() -> AwsAccessor {
+    let identityId = "eu-west-3:dc31782e-b253-c861-91a9-c7fbe3ed5a59"
+    let region = "eu-west-3"
+    let service = "execute-api"
+    let url = "https://2oeget5egh.execute-api.eu-west-3.amazonaws.com/Test/recommendation/"
+    let httpMethod: String = "POST"
+    var parameters: [String: Any] = ["param1": 1, "param2": 2, "from": "swift"]
+    return AwsAccessor(identityId: identityId, region: region, service: service, url: url, httpMethod: httpMethod, parameters: parameters)
+}
+
 @Test("test if testing works") func testTest()  {
     #expect(true)
 }
 
 @Test("get credentials") func testGetCredentials() async throws {
     // Write your test here and use APIs like `#expect(...)` to check expected conditions.
-    let aws = AwsAccessor()
+    let aws = initializeDefaultAwsAccessor()
     let cred = try await aws.getCredentialsForIdentity()
     print(cred)
     #expect(cred.isEmpty() == false)
@@ -19,7 +29,7 @@ import Foundation
 
 @Test("call lambda") func testCallLambda() async throws {
     // Write your test here and use APIs like `#expect(...)` to check expected conditions.
-    let aws = AwsAccessor(httpMethod: "POST", parameters: ["param1": 1, "param2": 2, "from": "swift"])
+    let aws = initializeDefaultAwsAccessor()
     let cred = try await aws.getCredentialsForIdentity()
     print("--- credentials retrieved")
     let response = await aws.callAPIGateway(accessKey: cred.accessKeyId!, secretKey: cred.secretAccessKey!, sessionToken: cred.sessionToken!)

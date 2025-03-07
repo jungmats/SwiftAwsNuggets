@@ -10,12 +10,22 @@ import AWSClientRuntime
 import AWSCognitoIdentity
 
 public struct AwsAccessor {
-    let identityId = "eu-west-3:dc31782e-b253-c861-91a9-c7fbe3ed5a59"
-    let region = "eu-west-3"
-    let service = "execute-api"
-    let url = URL(string: "https://2oeget5egh.execute-api.eu-west-3.amazonaws.com/Test/recommendation/")!
-    var httpMethod = "GET"
+    var identityId: String
+    var region: String
+    var service: String
+    var url: URL
+    var httpMethod: String
     var parameters = [String: Any]()
+    
+    // Public initializer
+    public init(identityId: String, region: String, service: String, url: String, httpMethod: String, parameters: [String: Any]) {
+        self.identityId = identityId
+        self.region = region
+        self.service = service
+        self.url = URL(string: url)!
+        self.httpMethod = httpMethod
+        self.parameters = parameters
+    }
     
     public func getCredentialsForIdentity() async throws -> Credentials {
         do {

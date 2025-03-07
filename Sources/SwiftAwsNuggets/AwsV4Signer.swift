@@ -75,7 +75,7 @@ public struct AwsV4Signer {
         return request
     }
 
-    private func canonicalRequest(amzDate: String, hashedPayload: String) -> String {
+    func canonicalRequest(amzDate: String, hashedPayload: String) -> String {
         let canonicalURI = url.path.isEmpty ? "/" : url.path + "/"
         print("canonical URI \(canonicalURI)")
         let canonicalQueryString = url.query ?? ""
@@ -93,7 +93,7 @@ public struct AwsV4Signer {
         return canonicalRequest
     }
     
-    private func sha256(_ input: String) -> String {
+    func sha256(_ input: String) -> String {
         let data = Data(input.utf8)
         let hashed = SHA256.hash(data: data)
         let retValue = hashed.map { String(format: "%02x", $0) }.joined()
@@ -101,12 +101,12 @@ public struct AwsV4Signer {
         return retValue
     }
     
-    private func hmacSHA256(key: Data, data: String) -> Data {
+    func hmacSHA256(key: Data, data: String) -> Data {
         let keyHMAC = HMAC<SHA256>.authenticationCode(for: Data(data.utf8), using: SymmetricKey(data: key))
         return Data(keyHMAC)
     }
         
-    private func getSignatureKey(secretKey: String, dateStamp: String, regionName: String, serviceName: String) -> Data {
+    func getSignatureKey(secretKey: String, dateStamp: String, regionName: String, serviceName: String) -> Data {
         let kSecret = "AWS4" + secretKey
         let kDate = hmacSHA256(key: Data(kSecret.utf8), data: dateStamp)
         let kRegion = hmacSHA256(key: kDate, data: regionName)
