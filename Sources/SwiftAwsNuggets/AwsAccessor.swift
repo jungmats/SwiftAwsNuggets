@@ -109,15 +109,15 @@ public struct AwsAccessor {
 }
 
 public struct Credentials {
-    var accessKeyId: String?
-    var secretAccessKey: String?
-    var sessionToken: String?
+    public var accessKeyId: String?
+    public var secretAccessKey: String?
+    public var sessionToken: String?
     
-    func asString() -> String {
+    public func asString() -> String {
         return "accessKeyId: \(self.accessKeyId ?? "<empty>") secretAccessKey: \(self.secretAccessKey ?? "<empty>") sessionToken: \(self.sessionToken ?? "<empty>")"
     }
     
-    func isEmpty() -> Bool {
+    public func isEmpty() -> Bool {
         return self.accessKeyId == nil && self.secretAccessKey == nil && self.sessionToken == nil
     }
 }
