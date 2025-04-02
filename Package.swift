@@ -29,7 +29,7 @@ let package = Package(
                 .product(name: "AWSCognitoIdentity", package: "aws-sdk-swift")
             ],
             path: "Sources/SwiftAwsNuggets",
-            sources: ["AwsAccessor.swift", "AwsV4Signer.swift"]
+            sources: ["AwsAccessor.swift", "AwsV4Signer.swift", "AwsIdentityHelper.swift"]
         ),
         .testTarget(
             name: "SwiftAwsNuggetsTests",

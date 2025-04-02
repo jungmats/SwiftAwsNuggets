@@ -10,14 +10,13 @@ import AWSClientRuntime
 import AWSCognitoIdentity
 
 public struct AwsAccessor {
-    var identityId: String
+    var identityId: String?
     var region: String
     var service: String
     var url: URL
     var httpMethod: String
     var parameters = [String: Any]()
     
-    // Public initializer
     public init(identityId: String, region: String, service: String, url: String, httpMethod: String, parameters: [String: Any]) {
         self.identityId = identityId
         self.region = region
@@ -26,7 +25,7 @@ public struct AwsAccessor {
         self.httpMethod = httpMethod
         self.parameters = parameters
     }
-    
+        
     public func getCredentialsForIdentity() async throws -> Credentials {
         do {
             // Initialize the Cognito Identity client
@@ -122,3 +121,6 @@ public struct Credentials {
     }
 }
 
+enum AwsAccessorError: Error {
+    case missingArgument(String)
+}

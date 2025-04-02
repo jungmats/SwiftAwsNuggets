@@ -67,3 +67,15 @@ func initializeDefaultAwsAccessor() -> AwsAccessor {
     print("sha256 -> \(response)")
     #expect(response == "d2f441c8d0987f15ab3bd88e05b450d1e5e85c4670d60147a7cb5f74539b8dba")
 }
+
+@Test("create cognito identity") func testCreateCognitoIdentity() async throws {
+    guard let input = ProcessInfo.processInfo.environment["COGNITO_IDENTITY_POOL_ID"] else {
+            #expect("COGNITO_IDENTITY_POOL_ID environment variable not found" == "")
+            return
+        }
+    print("identity pool id: \(input)")
+    let result = try await AwsIdentityHelper.createCognitoIdentity(identityPoolId: input, region: "eu-west-3")
+    print(result)
+    #expect(result != nil)
+}
+
